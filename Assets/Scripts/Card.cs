@@ -19,8 +19,19 @@ public class Card : MonoBehaviour
     [SerializeField] private TMP_Text topText;
     [SerializeField] private TMP_Text bottomText;
 
+    [Header("Card faces")]
+    [SerializeField] private GameObject cardFront;
+    [SerializeField] private GameObject cardBack;
+    private Button cardButton;
     private bool isDiscarded;
-    public void SetCardData(string suit, string cardRank)
+    private bool isShowingCard;
+
+    private void Awake()
+    {
+        cardButton = GetComponent<Button>();
+        cardButton.onClick.AddListener(FlipCard);
+    }
+    public void SetCardData(string suit, string cardRank,bool isAICard)
     {
         switch (suit)
         {
@@ -50,5 +61,19 @@ public class Card : MonoBehaviour
         middleText.text = cardRank;
         bottomText.text = cardRank;
         topText.text = cardRank;
+        cardButton.interactable = !isAICard;
+        ShowCardFrontSide(!isAICard);
+    }
+    public void ShowCardFrontSide(bool canshow)
+    {
+        isShowingCard = canshow;
+        cardFront.SetActive(canshow);
+        cardBack.SetActive(!canshow);
+    }
+    public void FlipCard()
+    {
+        isShowingCard = !isShowingCard;
+        cardFront.SetActive(isShowingCard);
+        cardBack.SetActive(!isShowingCard);
     }
 }
